@@ -7,7 +7,7 @@ model = keras.models.load_model('neuro.h5')
 
 img_path = 'data/test/overheating/ov61.jpg'   # input image path
 img = load_img(img_path, target_size=(80, 80))
-classes = [bin(i).replace("0b", "") for i in range(128)]
+classes = ['clear', 'overheating', 'stringing']
 
 x = img_to_array(img)
 x = 255 - x
