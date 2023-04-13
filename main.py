@@ -19,19 +19,19 @@ train_dir = 'data/train'
 val_dir = 'data/val'
 test_dir = 'data/test'
 
-img_width, img_height = 224, 32   # здесь нужно поиграться
+img_width, img_height = 80, 80   # здесь нужно поиграться
 
 input_shape = (img_width, img_height, 3)
 
 # во всем этом блоке можно играть с параметрами
 
 epochs = 100
-batch_size = 4
+batch_size = 2
 
 # эти параметры нужно будет изменить в соответствии с размерами датасета
-nb_train_samples = 256
-nb_validation_samples = 256
-nb_test_samples = 256
+nb_train_samples = 96
+nb_validation_samples = 32
+nb_test_samples = 32
 
 model = Sequential()
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
@@ -50,7 +50,7 @@ model.add(Flatten())
 model.add(Dense(64))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(128))
+model.add(Dense(3))
 model.add(Activation('sigmoid'))
 
 # конец блока
@@ -79,7 +79,7 @@ test_generator = datagen.flow_from_directory(
     batch_size=batch_size,
     class_mode='categorical')
 
-model.fit_generator(
+model.fit(
     train_generator,
     steps_per_epoch=nb_train_samples // batch_size,
     epochs=epochs,
@@ -88,13 +88,13 @@ model.fit_generator(
 
 scores = model.evaluate_generator(test_generator, nb_test_samples // batch_size)
 
-model.save('neuro.h5')   # сохранение нейросети
+model.save('neuro_new.h5')   # сохранение нейросети
 print(f"Точность на тестовых данных: {scores[1]*100}%")
 
 
-img_path = ''   # input image path
-img = load_img(img_path, target_size=(32, 224))
-classes = [bin(i).replace("0b", "") for i in range(128)]
+img_path = 'data/test/stringing/str16.jpg'   # input image path
+img = load_img(img_path, target_size=(80, 80))
+classes = ['clear', 'overheating', 'stringing']
 
 x = img_to_array(img)
 x = 255 - x
